@@ -55,12 +55,23 @@ func main() {
     if err != nil {
         log.Fatalf("Could not parse the file:%v", err)
     }
-
+    //Test CreateConsignment function
     r, err := client.CreateConsignment(context.Background(), consignment)
     if err != nil {
         log.Fatalf("Could not create the consignment:%v", err)
     }
     log.Printf("Created:%t", r.Created)
+
+    //Test GetConsignmentList function
+
+    repo_list, err_list := client.GetConsignmentList(context.Background(), &pb.GetRequest{})
+    if err_list != nil {
+        log.Fatalf("Could not list consignments:%v", err_list)
+    }
+
+    for _, v := range repo_list.Consignments{
+        log.Println(v)
+    }
 
 }
 

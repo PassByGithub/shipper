@@ -25,6 +25,7 @@ type Repository struct{
 //Define an interface for Repository
 type IRepository interface  {
     Create(*pb.Consignment) (*pb.Consignment, error)
+    GetList() []*pb.Consignment
 }
 
 //Impletement the Create method
@@ -32,6 +33,10 @@ func (repo *Repository) Create(consignment *pb.Consignment) (*pb.Consignment, er
     updated := append(repo.consignments, consignment)
     repo.consignments = updated
     return consignment, nil
+}
+
+func (repo *Repository) GetList() []*pb.Consignment{
+    return repo.consignments
 }
 
 //service Impletement all the methods defined in .protoc
@@ -54,13 +59,9 @@ func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment) (*
 
 func (s *service) GetConsignmentList(ctx context.Context, req *pb.GetRequest) (*pb.Response, error){
     //get the consignments
-    Consignments, err := s.repo.Create(req)
-    if err != nil {
-        return nil, err
-    }
-
+    consignments := s.repo.GetList()
     //return Response and defined data structure
-    return &pb.Response{Created: true, Consignment: consignment}, nil
+    return &pb.Response{Consignments: consignments}, nil
 }
 func main() {
 
