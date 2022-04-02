@@ -3,5 +3,5 @@
 echo "Hello world!"
 
 git add .
-git commit -m data
+git commit -m date
 git push -u origin master
