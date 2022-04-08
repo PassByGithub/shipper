@@ -11,5 +11,5 @@ build:
 	docker build -t kxxx/consignment-service-gomicro .
 
 run:
-	docker run -d -p 50051:50051 --name consignment-service kxxx/consignment-service
+	docker run -d -p 50051:50051 --name consignment-service-gomicro kxxx/consignment-service-gomicro
 
