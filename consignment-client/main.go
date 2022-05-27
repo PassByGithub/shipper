@@ -41,20 +41,20 @@ func main() {
     if err != nil{
         log.Fatalf("failed to connect:%v", err)
     }
-    //set up a gRPC server
+    //register a micro service connection on gRPC server
     defer conn.Close()
     client := pb.NewShippingServiceClient(conn)
 
+    //read a json file sended to server
     file := defaultFilename
     if len(os.Args) > 1{
         file = os.Args[1]
     }
-
     consignment, err := parseFile(file)
-
     if err != nil {
         log.Fatalf("Could not parse the file:%v", err)
     }
+
     //Test CreateConsignment function
     r, err := client.CreateConsignment(context.Background(), consignment)
     if err != nil {
@@ -63,12 +63,12 @@ func main() {
     log.Printf("Created:%t", r.Created)
 
     //Test GetConsignmentList function
-
+    //input: empty GetListRequest
+    //output:repo_list, a list of consignments
     repo_list, err_list := client.GetConsignmentList(context.Background(), &pb.GetRequest{})
     if err_list != nil {
         log.Fatalf("Could not list consignments:%v", err_list)
     }
-
     for _, v := range repo_list.Consignments{
         log.Println(v)
     }

@@ -24,7 +24,7 @@ message Container{
     string user_id = 4;
 }
 
-
+// GetRequest 
 message GetRequest{}
 
 message Response {
