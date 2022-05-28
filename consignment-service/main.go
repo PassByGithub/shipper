@@ -4,11 +4,10 @@ import (
 
     "log"
     "net"
+    "context"
 
     pb "shipper/consignment-service/consignment"
-    "golang.org/x/net/context"
-    "google.golang.org/grpc"
-    "google.golang.org/grpc/reflection"
+    "github.com/micro/go-micro/v2"
 
 )
 
@@ -44,42 +43,49 @@ type service struct{
 }
 
 //service.CreateConsignment:parse the context from client.
-func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment) (*pb.Response, error){
+func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, res *pb.Response) error{
     //save the consignment to the database;
     consignment, err := s.repo.Create(req)
     if err != nil {
-        return nil, err
+        return error
     }
     //return Response and defined data structure
-    return &pb.Response{Created: true, Consignment: consignment}, nil
+    res.Created = true
+    res.Consignment = consignment
+    return nil
 }
+
+
 //service.GetConsignmentList:
-func (s *service) GetConsignmentList(ctx context.Context, req *pb.GetRequest) (*pb.Response, error){
+func (s *service) GetConsignmentList(ctx context.Context, req *pb.GetRequest, res*pb.Response) error{
     //get the consignment list from database
     consignments := s.repo.GetList()
+    res.Consignments = consignments
     //return Response and defined data structure to the client
-    return &pb.Response{Consignments: consignments}, nil
+    return nil
 }
 func main() {
 
     repo := &Repository{}
-    unimplete := new(pb.UnimplementedShippingServiceServer)
 
-    // configure the gRPC server
-    lis, err := net.Listen("tcp", port)
-    if err != nil{
-        log.Fatalf("failed to listen:%v", err)
-    }
     //register a gRPC server on gRPC server
-    s := grpc.NewServer()
+    s := micro.NewService(
 
-    //register our microservice on the grpc server
-    pb.RegisterShippingServiceServer(s, &service{repo, unimplete})
+        micro.Name("shippy.service.consignment"),
 
-    //reflection registeration
-    reflection.Register(s)
-    if err := s.Serve(lis); err != nil{
-        log.Fatalf("failed to serve:%v", err)
+
+    )
+
+    s.Init()
+
+    if err := pb.RegisterShippingServiceServerHandler(s.Server(), &consignmentService{repo}); err != nil{
+        log.Panic(err)
     }
+
+    if err :=service.Run(); err != nil{
+        log.Panic(err)
+    }
+
+
 }
 

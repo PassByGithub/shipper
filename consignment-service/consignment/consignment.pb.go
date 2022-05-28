@@ -170,6 +170,7 @@ func (x *Container) GetUserId() string {
 	return ""
 }
 
+// GetRequest
 type GetRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
