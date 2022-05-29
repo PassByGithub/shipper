@@ -8,8 +8,7 @@ import (
     "os"
 
     pb "consignment-service/consignment"
-    "golang.org/x/net/context"
-    "google.golang.org/grpc"
+    "go-micro.dev/v4"
 
 )
 
@@ -36,14 +35,10 @@ func parseFile(file string) (*pb.Consignment, error){
 
 func main() {
 
-    // configure the gRPC connetcion
-    conn, err := grpc.Dial(address, grpc.WithInsecure())
-    if err != nil{
-        log.Fatalf("failed to connect:%v", err)
-    }
-    //register a micro service connection on gRPC server
-    defer conn.Close()
-    client := pb.NewShippingServiceClient(conn)
+    service := micro.NewService()
+    service.Init()
+
+    cli := pb.NewShippingServiceClient(
 
     //read a json file sended to server
     file := defaultFilename

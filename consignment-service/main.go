@@ -8,6 +8,7 @@ import (
     pb "shipper/consignment-service/consignment"
     "go-micro.dev/v4"
 
+
 )
 
 //certain port
@@ -45,7 +46,7 @@ func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, re
     //save the consignment to the database;
     consignment, err := s.repo.Create(req)
     if err != nil {
-        return error
+        return err
     }
     //return Response and defined data structure
     res.Created = true
@@ -76,11 +77,11 @@ func main() {
 
     s.Init()
 
-    if err := pb.RegisterShippingServiceHandler(s.Server(), &consignmentService{repo}); err != nil{
+    if err := pb.RegisterShippingServiceHandler(s.Server(), &service{repo}); err != nil{
         log.Panic(err)
     }
 
-    if err :=service.Run(); err != nil{
+    if err :=s.Run(); err != nil{
         log.Panic(err)
     }
 
