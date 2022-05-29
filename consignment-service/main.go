@@ -3,11 +3,10 @@ package main
 import (
 
     "log"
-    "net"
     "context"
 
     pb "shipper/consignment-service/consignment"
-    "github.com/micro/go-micro/v2"
+    "go-micro.dev/v4"
 
 )
 
@@ -39,7 +38,6 @@ func (repo *Repository) GetList() []*pb.Consignment{
 //service Impletement all the methods defined in .protoc, then service will get theses output to database
 type service struct{
     repo IRepository
-    *pb.UnimplementedShippingServiceServer
 }
 
 //service.CreateConsignment:parse the context from client.
@@ -78,7 +76,7 @@ func main() {
 
     s.Init()
 
-    if err := pb.RegisterShippingServiceServerHandler(s.Server(), &consignmentService{repo}); err != nil{
+    if err := pb.RegisterShippingServiceHandler(s.Server(), &consignmentService{repo}); err != nil{
         log.Panic(err)
     }
 
