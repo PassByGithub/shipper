@@ -1,10 +1,9 @@
 module shipper/consignment-service
 
-go 1.17
+go 1.18
 
 require (
 	go-micro.dev/v4 v4.6.0
-	google.golang.org/grpc v1.45.0
 	google.golang.org/protobuf v1.28.0
 )
 
@@ -41,7 +40,6 @@ require (
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
-	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
