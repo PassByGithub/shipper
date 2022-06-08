@@ -14,7 +14,6 @@ import (
 
 //certain port
 const (
-	address         = "localhost:50051"
 	defaultFilename = "consignment.json"
 )
 
@@ -37,7 +36,7 @@ func main() {
 	service := micro.NewService()
 	service.Init()
 
-	cli := pb.NewShippingService("", service.Client())
+	cl := pb.NewShippingService("shippy.service.consignment", service.Client())
 
 	//read a json file sended to server
 	file := defaultFilename
