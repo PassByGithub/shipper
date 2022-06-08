@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package vessel;
 
+option go_package = "shipper/vessel-service/proto/vessel";
+
 service VesselService{
     rpc FindAvailable(Specification) returns (Response){}
 }
