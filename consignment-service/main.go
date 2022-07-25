@@ -5,7 +5,7 @@ import (
 	"log"
 
 	pb "shipper/consignment-service/consignment"
-
+	vesselProto "shipper/vessel-service/proto/vessel"
 	"go-micro.dev/v4"
 )
 
@@ -35,10 +35,28 @@ func (repo *Repository) GetList() []*pb.Consignment {
 //service Impletement all the methods defined in .protoc, then service will get theses output to database
 type service struct {
 	repo IRepository
+	vesselClient vesselProto.VesselService
 }
 
 //service.CreateConsignment:parse the context from client.
 func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, res *pb.Response) error {
+
+	vesselResponse, err := s.vesselClient.FindAvailable(ctx, &vesselProto.Specification
+	{
+		MaxWeight: req.Weight,
+		Capacity:  int32(len(req.Containers)),
+	})
+
+	if vesselResponse == nil{
+		return error.New("error fetching vessel, returned nil")
+	}
+
+	if err != nil{
+		return err
+	}
+	
+	req.VesselID = vesselResponss.Vessel.Id
+
 	//save the consignment to the database;
 	consignment, err := s.repo.Create(req)
 	if err != nil {
