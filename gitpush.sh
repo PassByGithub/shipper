@@ -6,3 +6,4 @@ git commit -m date
 git push -u origin master
 
 echo "git push succeed!"
+echo "file updated!"
